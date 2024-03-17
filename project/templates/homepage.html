@@ -4,6 +4,184 @@
 
 {% block body %} 
 
-    d sdvsdvsdvsdvsdvsdvdsvdsvss
+    <div class="main overflow-auto grid cols-12 grow p-2">
+        <!-- Top Search Bar -->
+        <div class="header_search flex col-span-12 justify-between h-14">
+            <!-- Project / Task Title section -->
+            <div class="flex items-center mr-4">
+                <button class="w-9 h-9 flex justify-center items-center bg-gray-200 rounded-lg ">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="currentColor w-3 h-3 text-gray-500">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+                    </svg>
+                </button>
+                <h1 class="font-bold text-xl ml-2 p-2">My Projects</h1>
+            </div>
+            <!-- search bar Section -->
+            <div class="flex items-center justify-center grow">
+                <div class="flex rounded-full px-2 w-full shadow-lg search-div"> 
+                    <input
+                        type="text"
+                        class="search-bar w-full bg-[#0d1829] flex bg-transparent pl-2 text-gray-500 outline-0 rounded-lg"
+                        placeholder="Search Projects,Task etc... "
+                    />
+                    <button id="search_botton" data-url="{}" type="submit" class="relative p-2 rounded-full hover:text-blue-400">
+                        <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+                        </svg>
+                    </button>
+                </div>
+                <button class="self-center flex p-1 cursor-pointer bg-[#0d1829] text-gray-100 rounded-lg w-9 h-9 items-center justify-center ml-2" > 
+                    <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor" class="h-5 w-5 currentColor">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Filter</title> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Filter"> <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24" height="24"> </rect> <line x1="4" y1="5" x2="16" y2="5" id="Path" stroke="currentColor" stroke-width="2" stroke-linecap="round"> </line> <line x1="4" y1="12" x2="10" y2="12" id="Path" stroke="currentColor" stroke-width="2" stroke-linecap="round"> </line> <line x1="14" y1="12" x2="20" y2="12" id="Path" stroke="currentColor" stroke-width="2" stroke-linecap="round"> </line> <line x1="8" y1="19" x2="20" y2="19" id="Path" stroke="currentColor" stroke-width="2" stroke-linecap="round"> </line> <circle id="Oval" stroke="currentColor" stroke-width="2" stroke-linecap="round" cx="18" cy="5" r="2"> </circle> <circle id="Oval" stroke="currentColor" stroke-width="2" stroke-linecap="round" cx="12" cy="12" r="2"> </circle> <circle id="Oval" stroke="currentColor" stroke-width="2" stroke-linecap="round" cx="6" cy="19" r="2"> </circle> </g> </g> </g>
+                    </svg>
+                </button>
+            </div>
+            <!-- Add project / task button -->
+            <button id="addproject" class="toggle-project-modal h-full min-w-24 flex justify-center items-center bg-[#f3f8fc] hover:bg-blue-400 active:bg-[#f3f8fc] text-gray-600 hover:text-gray-100 transition-all rounded-md ml-10 " data-url="">
+                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 w-6">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="currentColor" fill-rule="evenodd" d="M10 3a7 7 0 100 14 7 7 0 000-14zm-9 7a9 9 0 1118 0 9 9 0 01-18 0zm14 .069a1 1 0 01-1 1h-2.931V14a1 1 0 11-2 0v-2.931H6a1 1 0 110-2h3.069V6a1 1 0 112 0v3.069H14a1 1 0 011 1z"></path></g>
+                </svg>
+            </button>
+        </div>
+
+        <!-- result and banner pane -->
+        <div class="mt-10 flex justify-between col-span-8">         
+            {% include 'components/result_container.html' %}
+        </div>
+        <!-- banner  -->
+        <div class="mt-10 mb-10 ">
+            <!-- meeting info -->
+            <div class="flex justify-between w-full">
+                <p class="font-bold text-lg">Upcoming Meeting</p>
+                <a href="#" class="text-blue-400">See all</a>
+            </div>
+            
+            <div class="pr-3">
+                <!-- Meeeting section -->
+                <div class="flex flex-col w-full p-2 mt-3 rounded-md bg-[#e9fbef]" >
+                    <h5 class="font-bold text-lg">Meeting Name</h5>
+                    <p class="text-sm">The meeting aims to identify areas for improvement and ensure the design aligns with user needs and business goals.</p>
+                    <!-- meeting action -->
+                    <div class="w-full py-5 px-2 bg-[#fff] mt-3 rounded-lg">
+                        <!-- time section -->
+                        <div class="w-full flex justify-between">
+                            <div>
+                                <p>Time</p>
+                                <p class="font-bold">12:00-12:30</p>
+                            </div>
+                            <div>
+                                <p>Duration</p>
+                                <p class="font-bold ">30 min</p>
+                            </div>
+                        </div>
+                        <!-- invite section -->
+                        <div>
+                            <div class="flex flex-col mt-5">
+                                <p>invited member</p>
+                                <div class="users flex cursor-pointer mt-1">
+                                    <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                        <img src="https://png.pngtree.com/thumb_back/fh260/background/20230612/pngtree-in-the-style-of-2d-game-art-image_2884743.jpg" alt="profile-picture" class="object-cover w-full h-full">
+                                    </span>
+                                    <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                        <img src="https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg" alt="profile-picture" class="object-cover w-full h-full">
+                                    </span>
+                                    <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                        <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="profile-picture" class="object-cover w-full h-full">
+                                    </span>
+                                    <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPQm8MbyRHmyKtSGrDTz6vxENdPnrdXFhp2g&usqp=CAU" alt="profile-picture" class="object-cover w-full h-full">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Join meeting button -->
+                        <button
+                            class="block w-[70%] mt-8 mx-auto rounded-lg bg-[#6366f1] py-3 px-6 font-sans text-xs font-bold text-white shadow-md shadow-[#6366f1]-500/20 transition-all hover:shadow-lg hover:shadow-[#6366f1]-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+                        >
+                        Join Meeting
+                        </button>
+                    </div>
+ 
+                </div>
+                <!-- upcoming task section -->
+                <div class="mt-5 ">
+                    <h5 class="font-bold text-lg">Upcoming Task</h5>
+                    <!-- urgent task card -->
+                    <div class="w-full mt-1 py-4 px-2 shadow-xl rouded-md">
+                        <!-- task name and urgentcy -->
+                        <div class="w-full flex justify-between items-center">
+                            <p class="font-semibold">Product Planing</p>
+                            <div class="flex text-gray-900 items-center">
+                                <p class="bg-yellow-200 text-yellow-600 mr-5 rounded-full px-2 text-sm">urgent</p>
+                                <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class=" w-4" >
+                                    <g id="SVGRepo_bgCarrier" stroke-width="1"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g fill="currentColor" fill-rule="evenodd"> <circle cx="10.5" cy="10.5" r="1"></circle> <circle cx="10.5" cy="5.5" r="1"></circle> <circle cx="10.5" cy="15.5" r="1"></circle> </g> </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- users -->
+                        <div class="users flex mt-2">
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://public.tableau.com/avatar/a08df9b8-ff3f-4c9f-a506-4dcf9df507bf.jpeg" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://www.adobe.com/express/create/media_141d66cd6a7b6cdf4553eb8af0f5d20b044463f2a.jpeg?width=400&format=jpeg&optimize=medium" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                        </div>
+                        <!-- progress -->
+                        <div class="flex items-center mt-3">
+                            <progress max="100" min="0" value="50" class="w-[10.5rem] h-2 rounded-lg text-yellow-300 mr-1"></progress>
+                            <span class="flex items-center text-sm text-gray-400">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+                                </svg>
+                                <span class="text-sm">10:00-11:00</span>
+                            </span>
+                        </div>
+                        <p class="text-gray-400">Management</p>
+                    </div>
+                    <!-- urgent task card -->
+                    <div class="w-full mt-1 py-4 px-2 shadow-xl rouded-md">
+                        <!-- task name and urgentcy -->
+                        <div class="w-full flex justify-between items-center">
+                            <p class="font-semibold">Product Planing</p>
+                            <div class="flex text-gray-900 items-center">
+                                <p class="bg-yellow-200 text-yellow-600 mr-5 rounded-full px-2 text-sm">urgent</p>
+                                <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class=" w-4" >
+                                    <g id="SVGRepo_bgCarrier" stroke-width="1"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g fill="currentColor" fill-rule="evenodd"> <circle cx="10.5" cy="10.5" r="1"></circle> <circle cx="10.5" cy="5.5" r="1"></circle> <circle cx="10.5" cy="15.5" r="1"></circle> </g> </g>
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- users -->
+                        <div class="users flex mt-2">
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://public.tableau.com/avatar/a08df9b8-ff3f-4c9f-a506-4dcf9df507bf.jpeg" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                            <span class="w-7 h-7 rounded-full bg-green-400 overflow-hidden">
+                                <img src="https://www.adobe.com/express/create/media_141d66cd6a7b6cdf4553eb8af0f5d20b044463f2a.jpeg?width=400&format=jpeg&optimize=medium" alt="profile-picture" class="object-cover w-full h-full">
+                            </span>
+                        </div>
+                        <!-- progress -->
+                        <div class="flex items-center mt-3">
+                            <progress max="100" min="0" value="50" class="w-[10.5rem] h-2 rounded-lg text-yellow-300 mr-1"></progress>
+                            <span class="flex items-center text-sm text-gray-400">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+                                </svg>
+                                <span class="text-sm">10:00-11:00</span>
+                            </span>
+                        </div>
+                        <p class="text-gray-400">Management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 {% endblock%}
