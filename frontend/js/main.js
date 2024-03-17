@@ -1,8 +1,43 @@
+// Handle CRSF TOken 
+$.ajaxSetup({
+    beforeSend: function beforeSend(xhr, settings) {
+        function getCookie(name) {
+            let cookieValue = null;
+
+
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+
+                for (let i = 0; i < cookies.length; i += 1) {
+                    const cookie = jQuery.trim(cookies[i]);
+
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (`${name}=`)) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+
+            return cookieValue;
+        }
+
+        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+            // Only send the token to relative URLs i.e. locally.
+            xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        }
+    },
+});
+
+
+
 $(document).on("click", ".toggle-project-modal", function(e) {
     e.preventDefault()
     $(".project-modal").toggleClass("hidden")
     // #TODO: clear file in file input
 })
+
+//  ...........Create New Project.........
 
 .on("click", ".js-project-submit", function(e){
     e.preventDefault();
@@ -14,10 +49,10 @@ $(document).on("click", ".toggle-project-modal", function(e) {
     
     console.log(text)
 
-    if(!text.length && !imageFile){return false}
+    if(!text.length){return}
     
     const formData = new FormData();
-    formData.append('post', text);
+    formData.append('title', text);
     formData.append('image', imageFile);
 
 
@@ -25,22 +60,23 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
     $.ajax({
         type: "POST",
-        url: $textarea.data("post-url"),
+        url: "/",
         data: formData,
         processData: false,  // Prevent jQuery from processing data
         contentType: false,  // Prevent jQuery from setting content type
 
         success: (htmlData) => {    
-            $(".post-container").prepend(htmlData)
+            $(".project_container").prepend(htmlData)
             $btn.prop("disabled", false).html(buttonInnerHtml)
             $(".project-modal").addClass("hidden");
             $textarea.val("");
             $('#upload').val("");
             $("#prev").addClass("hidden");
+            $(".project-modal").addClass("hidden")
         },
 
         error: (error) => {
-            console.warn(error);
+            console.warn(error.responseJSON);
             $btn.addClass("bg-red-500 text-white");
             $btn.prop("diabled", false).text("Error").css("background-color", "red");
             setTimeout(() => {

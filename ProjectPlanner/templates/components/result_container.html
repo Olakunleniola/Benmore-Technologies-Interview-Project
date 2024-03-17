@@ -40,7 +40,7 @@
     <p class="mt-4">17 results found</p>
     
     <!-- result Table -->
-    <div class="md:rounded-lg mx-auto mt-9 max-h-[700px] overflow-y-scroll scroll-smooth">     
+    <div class="md:rounded-lg mx-auto mt-9  pb-9  max-h-[700px] overflow-y-scroll scroll-smooth">     
         <!-- Header -->
         <div id="header" class="py-3 grid grid-cols-6 gap-2 bg-white text-gray-500 mb-5 rounded-lg shadow-lg sticky -top-[5px] z-20" role="table header">
             <span class="col-span-2 pl-10 text-sm font-normal text-left rtl:text-right text-gray-500">Task Name</span>
@@ -95,10 +95,12 @@
                 </button>
             </div>
         </div>
-    
-        {% for a in "qwertyuiopasdfghj" %}
-            {% include 'components/result.html' with id=a %}
-        {% endfor %}
+        
+        <div class="project_container">    
+            {% for project in projects %}
+                {% include 'components/result.html' with project=project %}
+            {% endfor %}
+        </div>
         
     </div>
 </div>
