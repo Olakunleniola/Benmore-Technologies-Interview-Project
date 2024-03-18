@@ -167,6 +167,8 @@ class EditDeleteProject (View):
             
             project.save()
             
+            project = annotate_single_queryset(project)
+            
             
             return render(
                 request,
