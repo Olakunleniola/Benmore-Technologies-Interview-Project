@@ -1,0 +1,89 @@
+<!-- Project Name -->
+<div class="col-span-2 flex flex-col ">
+    <div class="col-span-2 flex text-sm font-medium">
+        <div id="projectimg" class="w-8 h-8 overflow-hidden ">
+            <img src="{{project.image.url}}" alt="taskimg" class="w-full h-full object-cover">
+        </div>
+        <div class="edit flex w-10 h-10 bg-gray-500 rounded-full overflow-hidden hidden relative ">
+            <img id="uploadtarget" src="{{project.image.url}}" alt="taskimg" class="w-full h-full object-cover">
+            <label for="upload" class=" absolute w-full h-full top-0 bg-[#00000094] grid place-items-center font-bold text-yellow-200 cursor-pointer">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#fff" stroke-width="2" class="w-4 h-4 ">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z" fill="currentColor"></path> <path d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z" fill="currentColor"></path> </g>
+                </svg>
+            </label>
+            <input id="upload" type="file" class="hidden" onchange="previewImage(this, '#uploadtarget')" accept="image/*">
+        </div>
+        <div class="ml-2">
+            <div id="projectinfo">
+                <h3 class="text-sm text-gray-800 font-extrabold ">{{project.title}}</h3>
+                <p class="text-sm font-normal text-gray-600 ">{{ project.date|date:"M j, Y" }}</p>
+            </div>
+            <div class="edit flex flex-col hidden">
+                <label for="editname"></label>
+                <input id="editname" type="text" placeholder="{{ project.title }}" class="p-1 border-2 border-gray-200 mb-1 rounded-md">
+                <div class="flex justify-start items-center">
+                    <button  type="button" id="save-edit" data-url="{% url 'project:edit_delete' project.id %}" data-parent_id="{{project.id}}" class="bg-gray-300 text-sm text-gray-500 active:bg-gray-300 hover:text-gray-100 hover:bg-gray-700 rounded-md hover py-1 px-2 mr-2">Save</button>
+                    <button class="bg-gray-300 text-sm text-gray-500 active:bg-gray-300 hover:text-gray-100 hover:bg-gray-700 rounded-md hover py-1 px-2" data-parent_id="{{project.id}}" onclick="closeEdit(this)">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p id="error_display" class="text-red-500 px-4 text-sm font-bold hidden"></p>
+</div>
+<!-- Duration -->
+<div class="w-20 p-3 text-center bg-blue-100 text-sm rounded-md text-gray-600 font-bold">
+    3d, 12m
+</div>
+<!-- Task -->
+<div>
+    <h4 class="text-gray-700 font-bold">{{project.completed_tasks|default:0}}/{{project.total_tasks|default:0}}</h4>
+    <p class="text-gray-500">Tasks</p>
+</div>
+<!-- Status Progress -->
+<div class="flex flex-col justify-center py-2">
+    <div class="flex items-center text-blue-400 text-sm mb-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 48 48" class="w-3 h-3">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M8 21c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM8 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 24.33c-1.47 0-2.67 1.19-2.67 2.67s1.2 2.67 2.67 2.67 2.67-1.19 2.67-2.67-1.2-2.67-2.67-2.67zM14 38h28v-4H14v4zm0-12h28v-4H14v4zm0-16v4h28v-4H14z"></path></g>
+        </svg>
+        <p class="px-1">Progress</p>
+    </div>
+    <progress id="task_prog" min="0" value="{{project.completed_tasks|default:0}}" max="{{project.total_tasks|default:0}}" class="max-w-[70%] h-1.5 bg-blue-200 rounded-full"></progress>
+</div>
+<!-- Members and edit Button -->
+<div class="flex items-center justify-between text-sm relative">
+    <div class="flex items-center text-sm">
+        <img class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full dark:border-gray-700 shrink-0" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80" alt="">
+        <img class="object-cover w-6 h-6 -mx-1 border-2 border-white rounded-full dark:border-gray-700 shrink-0" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&q=80" alt="">
+        <p class="flex items-center justify-center w-6 h-6 -mx-1 text-xs text-blue-600 bg-blue-100 border-2 border-white rounded-full">+3</p>
+    </div>
+
+    <button id="option_but" class="px-1 py-1 text-gray-500 transition-colors duration-200 rounded-lg hover:bg-gray-100 relative group/item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+        </svg>
+        
+        <div class="options absolute top-[1.5rem] right-[1.2rem] bg-white w-[10rem] border border-2 z-30 rounded-md shadow-md group/edit invisible group-hover/item:visible">
+            <div class="flex items-center text-sm p-2 w-full pointer bg-gray-200 text-gray-900 hover:bg-gray-500 hover:text-gray-100 active:bg-gray-300" onclick="deleteParent(this)" data-parentid="{{project.id}}" data-url="{% url 'project:edit_delete' project.id %}">
+                <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.8489 22.6922C11.5862 22.7201 11.3509 22.5283 11.3232 22.2638L10.4668 14.0733C10.4392 13.8089 10.6297 13.5719 10.8924 13.5441L11.368 13.4937C11.6307 13.4659 11.8661 13.6577 11.8937 13.9221L12.7501 22.1126C12.7778 22.3771 12.5873 22.614 12.3246 22.6418L11.8489 22.6922Z" fill="currentColor"></path><path d="M16.1533 22.6418C15.8906 22.614 15.7001 22.3771 15.7277 22.1126L16.5841 13.9221C16.6118 13.6577 16.8471 13.4659 17.1098 13.4937L17.5854 13.5441C17.8481 13.5719 18.0387 13.8089 18.011 14.0733L17.1546 22.2638C17.127 22.5283 16.8916 22.7201 16.6289 22.6922L16.1533 22.6418Z" fill="currentColor"></path><path clip-rule="evenodd" d="M11.9233 1C11.3494 1 10.8306 1.34435 10.6045 1.87545L9.54244 4.37037H4.91304C3.8565 4.37037 3 5.23264 3 6.2963V8.7037C3 9.68523 3.72934 10.4953 4.67218 10.6145L7.62934 26.2259C7.71876 26.676 8.11133 27 8.56729 27H20.3507C20.8242 27 21.2264 26.6513 21.2966 26.1799L23.4467 10.5956C24.3313 10.4262 25 9.64356 25 8.7037V6.2963C25 5.23264 24.1435 4.37037 23.087 4.37037H18.4561L17.394 1.87545C17.1679 1.34435 16.6492 1 16.0752 1H11.9233ZM16.3747 4.37037L16.0083 3.50956C15.8576 3.15549 15.5117 2.92593 15.1291 2.92593H12.8694C12.4868 2.92593 12.141 3.15549 11.9902 3.50956L11.6238 4.37037H16.3747ZM21.4694 11.0516C21.5028 10.8108 21.3154 10.5961 21.0723 10.5967L7.1143 10.6285C6.86411 10.6291 6.67585 10.8566 6.72212 11.1025L9.19806 24.259C9.28701 24.7317 9.69985 25.0741 10.1808 25.0741H18.6559C19.1552 25.0741 19.578 24.7058 19.6465 24.2113L21.4694 11.0516ZM22.1304 8.7037C22.6587 8.7037 23.087 8.27257 23.087 7.74074V7.25926C23.087 6.72743 22.6587 6.2963 22.1304 6.2963H5.86957C5.34129 6.2963 4.91304 6.72743 4.91304 7.25926V7.74074C4.91304 8.27257 5.34129 8.7037 5.86956 8.7037H22.1304Z" fill="currentColor" fill-rule="evenodd"></path></g>
+                </svg>  
+                <span class="pl-2">Delete</span>
+            </div> 
+            <hr>
+            <div class="flex items-center text-sm w-full p-2 w-full pointer bg-gray-200 text-gray-900 hover:bg-gray-500 hover:text-gray-100 active:bg-gray-300" onclick="editParent(this)" data-parentid="{{project.id}}">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g>
+                </svg> 
+                <span class="pl-2">Edit</span>
+            </div>
+            <hr>
+            <div class="flex items-center text-sm w-full p-2 w-full pointer bg-gray-200 text-gray-900 hover:bg-gray-500 hover:text-gray-100 active:bg-gray-300 toggle-task-modal" data-url="{% url 'project:add_task' project.id %}" data-parentid="{{project.id}}">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g>
+                </svg> 
+                <span class="pl-2">Add Task</span>
+            </div>
+        </div>
+    </button>
+
+</div>

@@ -110,7 +110,7 @@
                   </div>
                   <hr>
                   <div class="w-full">
-                      <textarea  cols="30" rows="1" class="p-2 border border-solid border-3 border-teal-500 rounded-lg w-full my-3 project-name" placeholder="Enter Project Name......" maxlength="100" data-post-url="/"></textarea>
+                      <textarea  cols="30" rows="1" class="p-2 border border-solid border-3 border-teal-500 rounded-lg w-full my-3 project-name" placeholder="Enter Project Title/Name......" maxlength="100" data-post-url="/"></textarea>
                   </div>
                   <hr>
                   <div class="flex justify-between items-center space-x-4">
@@ -139,7 +139,55 @@
                 </div>
               </div>
         </div>
+        
+        <!-- Add Task Modal -->
+        <div class="w-full h-full z-50 absolute top-0 left-0 bg-gray-800 bg-opacity-70 rounded-[20px] flex justify-center items-center task-modal hidden">
+            <div class="bg-gray-900 rounded-lg w-1/3">
+                <div class="flex flex-col items-start p-4">
+                    
+                    <div class="flex items-center w-full ">
+                        <div class="text-gray-300 font-medium text-lg">New Task</div>
+                        <svg class="toggle-task-modal ml-auto fill-current text-white w-6 h-6 cursor-pointer hover:text-blue-300 active:text-white " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+                        <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"/>
+                        </svg>
+                    </div>
+                    
+                    <hr>
+                    <!-- Title text input -->
+                    <div class="w-full">
+                        <input type="text" class="task-title p-2 border border-solid border-3 border-teal-500 rounded-lg w-full my-3" placeholder="Enter Task Title" required>
+                    </div>
+                    
+                    <hr>
+                    <!-- Description text area -->
+                    <div class="w-full">
+                        <textarea  cols="30" rows="3" class="task-description p-2 border border-solid border-3 border-teal-500 rounded-lg w-full my-3 " placeholder="Enter Task Description......" maxlength="350"></textarea>
+                    </div>
+                    
+                    <hr>
+                    <!-- Check Box -->
+                    <div class="flex justify-between items-center space-x-4 border-gray-600 bg-white p-4 shadow-md h-10 rounded-md ">
+                        <label for="complted_task" class="flex items-center justify-center justify-items-center around cursor-pointer">
+                        <span class="font-medium ml-2">Task Completed</span>
+                        </label>
+                        <input id="completed_task" type="checkbox" value="true" class="ml-5 border-3 cursor-pointer p-2 hover:border-3 hover:border-blue-300 shadow-md" >
+                    </div>
 
+                    <hr>
+                    <!-- submit Task form  -->
+                    <div class="ml-auto mt-10 text-center">
+                        <button type="submit" class="bg-white text-gray-800 font-bold border-b-2 border-blue-400 hover:border-blue-600 hover:bg-blue-500 hover:text-white active:bg-white shadow-md py-2 px-6 inline-flex items-center transition-all text-sm js-task-submit">
+                            <span class="mr-2">Create Task</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="currentcolor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+            </div>    
+        </div>
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

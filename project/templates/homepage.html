@@ -24,7 +24,7 @@
                         class="search-bar w-full bg-[#0d1829] flex bg-transparent pl-2 text-gray-500 outline-0 rounded-lg"
                         placeholder="Search Projects,Task etc... "
                     />
-                    <button id="search_botton" data-url="{}" type="submit" class="relative p-2 rounded-full hover:text-blue-400">
+                    <button id="search_botton" type="button" class="relative p-2 rounded-full hover:text-blue-400">
                         <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
                         </svg>
@@ -37,16 +37,59 @@
                 </button>
             </div>
             <!-- Add project / task button -->
-            <button id="addproject" class="toggle-project-modal h-full min-w-24 flex justify-center items-center bg-[#f3f8fc] hover:bg-blue-400 active:bg-[#f3f8fc] text-gray-600 hover:text-gray-100 transition-all rounded-md ml-10 " data-url="">
+            <button id="addproject" class="toggle-project-modal h-full min-w-24 flex justify-center items-center bg-[#f3f8fc] hover:bg-blue-400 active:bg-[#f3f8fc] text-gray-600 hover:text-gray-100 transition-all rounded-md ml-10">
                 <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-6 w-6">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="currentColor" fill-rule="evenodd" d="M10 3a7 7 0 100 14 7 7 0 000-14zm-9 7a9 9 0 1118 0 9 9 0 01-18 0zm14 .069a1 1 0 01-1 1h-2.931V14a1 1 0 11-2 0v-2.931H6a1 1 0 110-2h3.069V6a1 1 0 112 0v3.069H14a1 1 0 011 1z"></path></g>
                 </svg>
             </button>
         </div>
-
-        <!-- result and banner pane -->
-        <div class="mt-10 flex justify-between col-span-8">         
-            {% include 'components/result_container.html' with projects=projects %}
+        <!-- Result  and result table div  -->
+        <div class="mt-10 flex justify-between col-span-8">
+            <div class=" mr-7 grow">
+                <!-- Result Header -->
+                <div class="flex justify-between h-12">
+            
+                    <div class="flex">
+                        <button class="flex w-32 p-2 h-full rounded-lg justify-center items-center transition-all bg-gray-200 bg-opacity-80 active:bg-gray-100 active:bg-opacity-80 hover:bg-gray-100 hover:border-2 hover:border-gray-900 hover:text-gray-900 hover:font-bold border-2 text-gray-900 border-gray-900 font-bold ">
+                            <svg fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 92 92" enable-background="new 0 0 92 92" xml:space="preserve" class="w-5 h-5 mr-3">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_80_" d="M86.6,41.3H41.8c-3,0-5.4-2.4-5.4-5.4V22.4c0-3,2.4-5.4,5.4-5.4h44.7c3,0,5.4,2.4,5.4,5.4v13.5 C92,38.9,89.6,41.3,86.6,41.3z M44.4,33.3H84V25H44.4V33.3z M86.6,75H41.8c-3,0-5.4-2.4-5.4-5.4V56.1c0-3,2.4-5.4,5.4-5.4h44.7 c3,0,5.4,2.4,5.4,5.4v13.5C92,72.6,89.6,75,86.6,75z M44.4,67H84v-8.3H44.4V67z M23.7,41.3H5.6c-3.1,0-5.6-2.5-5.6-5.6V22.6 C0,19.5,2.5,17,5.6,17h18.1c3.1,0,5.6,2.5,5.6,5.6v13.2C29.3,38.8,26.8,41.3,23.7,41.3z M8,33.3h13.3V25H8V33.3z M23.7,75H5.6 C2.5,75,0,72.5,0,69.4V56.2c0-3.1,2.5-5.6,5.6-5.6h18.1c3.1,0,5.6,2.5,5.6,5.6v13.2C29.3,72.5,26.8,75,23.7,75z M8,67h13.3v-8.3H8 V67z"></path> </g>
+                            </svg>
+                            <span> List</span>
+                        </button>   
+                        <button class="flex w-32 p-2 h-full text-gray-300 border border-1 rounded-lg justify-center items-center transition-all focus:bg-gray-200 focus:bg-opacity-80 active:bg-gray-100 active:bg-opacity-80 hover:bg-gray-100 hover:border-2 hover:border-gray-900 hover:text-gray-900 hover:font-bold focus:border-2 focus:text-gray-900 focus:border-gray-900 active:text-gray-900 focus:font-bold  ml-2">
+                            <svg width="59" height="79" viewBox="0 0 59 79" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3">
+                                <path d="M0 24H24V79H0V24Z" stroke="currentColor" stroke-width="5" />
+                                <path d="M35 24H59V58H35V24Z" stroke="currentColor"  stroke-width="5"/>
+                                <path d="M0 0H24V17H0V0Z" stroke="currentColor" fill="currentColor" stroke-width="5"/>
+                                <path d="M35 0H59V17H35V0Z" stroke="currentColor" fill="currentColor" stroke-width="5"/>
+                            </svg>
+                            <span> Board</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex ml-10 items-center">
+                        <p class="mr-2 font-bold text-gray-600">Show</p>
+                        <div class="relative">
+                            <select id="filter_project" class="appearance-none bg-transparent w-32 p-2 rounded-lg text-center transition-all  bg-opacity-80 active:bg-gray-100 active:bg-opacity-80 hover:bg-gray-100 hover:border-1 hover:border-gray-400 hover:text-gray-900 hover:font-bold border-2 text-gray-900 border-gray-900 active:text-gray-900 font-bold p-2 pr-8 outline-none">
+                                <option class="p-3" value="all">All</option>
+                                <option class="p-3" value="completed">Completed</option>
+                                <option class="p-3" value="above_50">Above 50%</option>
+                                <option class="p-3" value="below_50">Below 50%</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 12.586L16.707 5.88a1 1 0 1 1 1.414 1.414l-8.293 8.293a1 1 0 0 1-1.414 0L2.88 7.293a1 1 0 1 1 1.414-1.414L10 12.586z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+            
+                </div>   
+                <!-- Result Body -->
+                <div id="result_container">
+                    {% include 'components/result_component.html' with projects=projects %}
+                </div>
+            </div>
         </div>
         <!-- banner  -->
         <div class="mt-10 mb-10 ">
