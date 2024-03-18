@@ -1,29 +1,112 @@
 from django.views.generic import TemplateView
+from django.views import View
 from .models import Project
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Count, Case, When, F, Q, ExpressionWrapper, FloatField
 
+
+# Helper FUnction 
+def verify_image(image_file):
+    allowed_types = ['image/jpeg', 'image/png', 'image/gif']
+    # Check the content type of the image
+    if image_file.content_type not in allowed_types:
+        return False
+    return True
+
+def render_context(request,query_set):
+    context = {"projects": query_set, "no_of_result": query_set.count()}  
+    return render(
+        request,
+        "components/result_component.html",
+        context,
+        content_type = "application/html"
+    )
+
+
+# Handle POST and GETroutes for index for  / and request query parameters
 class HomePage(TemplateView):
     http_method_names = ["get", "post"]
     template_name = "homepage.html"
     
+    # provide context data for the hpmepage route /
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
-        projects = Project.objects.all().order_by("-id") 
+        projects = self.get_annotated_projects(Project.objects.all())
         context["projects"] = projects
+        context['no_of_result'] = projects.count()
+
         return context
     
+    # handle routes for query parameter like e.g /?query="query"
+    def get(self, request, *args, **kwargs):
+        # Check if 'name' parameter is present in the request query
+        query = request.GET.get('query')
+        status = request.GET.get('percentage')
+        
+        if status:
+            try:
+                projects = self.get_annotated_projects(Project.objects.all())
+                if status == 'all':
+                    return render_context(request, projects)
+                
+                elif status == 'above_50':
+                    projects_status_above_50_percent = projects.filter(completion_percentage__gte=50)
+                    print(projects_status_above_50_percent.count())
+                    return render_context(request, projects_status_above_50_percent)
+                
+                elif status == 'below_50':
+                    projects_status_below_50_percent = projects.filter(Q(completion_percentage__gt=50) | Q(total_tasks=0))
+                    return render_context(request, projects_status_below_50_percent)
+                    
+                elif status == 'completed':
+                    projects_completed = projects.filter(completion_percentage__gt=100)
+                    return render_context(request, projects_completed)
+                
+                return JsonResponse({"error": "ascsfsfsd"}, status=400)
+                    
+            except:
+                JsonResponse({"error":"something broke"}, status=400)
+        
+        elif query:
+            # Get project by name
+            try:
+                query = query.lower()
+                projects = Project.objects.filter(title__icontains=query)
+                if not projects.exists():
+                    return JsonResponse({'error': 'No projects found for the given query'}, status=404)
+                projects = self.get_annotated_projects(projects)
+                
+                return render_context(request, projects)
+            
+            except Project.DoesNotExist:
+                return JsonResponse({'error': 'Project not found'}, status=404)
+        
+        return super().get(request, *args, **kwargs)
+    
+    # helper Method to get values for each project
+    def get_annotated_projects(self, queryset):
+        return queryset.annotate(
+            total_tasks=Count('task'),
+            completed_tasks=Count(Case(When(task__completed=True, then=1))),
+            incomplete_tasks=Count(Case(When(task__completed=False, then=1))),
+            completion_percentage=ExpressionWrapper(
+                F('completed_tasks') * 100.0 / F('total_tasks'),
+                output_field=FloatField()
+            )
+        ).order_by("-id")
+    
+    # Handle POST request for index route /
     def post(self, request, *args, **kwargs):
         title = request.POST.get('title')
         project_image = request.FILES.get("image")
         
-        print(title)
         if not title:
-            return JsonResponse({'error': 'Name not provided'}, status=400)
+            return JsonResponse({'error': 'Title not provided'}, status=400)
         
         
         if project_image:
-            if not self.verify_image(project_image):
+            if not verify_image(project_image):
                 return JsonResponse({
                     'error': 'Invalid profile image. Only JPEG, PNG, and GIF files are allowed.'
                 }, status=400)
@@ -39,25 +122,64 @@ class HomePage(TemplateView):
         
         return render(
             request,
-            "components/result.html",
+            "components/projects_component.html",
             {
                 "project": project,
-                "show_link": True
             },
             content_type = "application/html"
         )
                 
+#  Handle DELETE and PUT request call to endpoint /<int>
+class EditDeleteProject (View):
+    #  Handle PUT request
+    def post(self, request, pk, *args, **kwargs):
+        
+        new_title = request.POST.get('title')
+        new_project_image = request.FILES.get("image")
+        
+        
+        if not new_title:
+            return JsonResponse({'error': 'Title not provided'}, status=400)
+        
+        if new_project_image:
+            if not verify_image(new_project_image):
+                return JsonResponse({
+                    'error': 'Invalid profile image. Only JPEG, PNG, and GIF files are allowed.'
+                }, status=400)
+        
+        
+        try: 
+            project = Project.objects.get(pk=pk)
+            if new_project_image:
+                project.image = new_project_image
             
-
-    @staticmethod
-    def verify_image(image_file):
-        allowed_types = ['image/jpeg', 'image/png', 'image/gif']
-
-        # Check the content type of the image
-        if image_file.content_type not in allowed_types:
-            return False
-
-        return True
+            if new_title:
+                project.title = new_title
+            
+            project.save()
+            
+            
+            return render(
+                request,
+                "components/project_component.html",
+                {
+                    "project": project,
+                },
+                content_type = "application/html"
+            )
+        
+        except Project.DoesNotExist:
+            return JsonResponse({'error': 'project not found'}, status=404)
+    #  handle DELETE request
+    def delete(self, request, pk, *args, **kwargs):
+        project = get_object_or_404(Project, pk=pk)
+        project.delete()
+        return JsonResponse({"msg": "Project successfully deleted"})
     
-
-
+#  Hande POST request to create new task for a given project
+class CreateTask(View):
+    
+    #handle POST request for endpoint /1/task
+    def post (self, request, pk, *args, **kwargs):
+        return  JsonResponse({"msg": "hello"})
+    
