@@ -4,6 +4,7 @@ from .models import Project
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Case, When, F, Q, ExpressionWrapper, FloatField
+from task.models import Task
 
 
 # Helper FUnction 
@@ -13,7 +14,7 @@ def verify_image(image_file):
     if image_file.content_type not in allowed_types:
         return False
     return True
-
+# helper function to render context
 def render_context(request,query_set):
     context = {"projects": query_set, "no_of_result": query_set.count()}  
     return render(
@@ -22,7 +23,16 @@ def render_context(request,query_set):
         context,
         content_type = "application/html"
     )
-
+# helper function to annotate an single queryset
+def annotate_single_queryset(queryset):
+    queryset.total_tasks = queryset.task_set.count()
+    queryset.completed_tasks = queryset.task_set.filter(completed=True).count()
+    queryset.incomplete_tasks = queryset.task_set.filter(completed=False).count()
+    if queryset.total_tasks > 0:
+        queryset.completion_percentage = (queryset.completed_tasks / queryset.total_tasks) * 100
+    else:
+        queryset.completion_percentage = 0
+    return queryset
 
 # Handle POST and GETroutes for index for  / and request query parameters
 class HomePage(TemplateView):
@@ -52,11 +62,10 @@ class HomePage(TemplateView):
                 
                 elif status == 'above_50':
                     projects_status_above_50_percent = projects.filter(completion_percentage__gte=50)
-                    print(projects_status_above_50_percent.count())
                     return render_context(request, projects_status_above_50_percent)
                 
                 elif status == 'below_50':
-                    projects_status_below_50_percent = projects.filter(Q(completion_percentage__gt=50) | Q(total_tasks=0))
+                    projects_status_below_50_percent = projects.filter(Q(completion_percentage__lt=50) | Q(total_tasks=0))
                     return render_context(request, projects_status_below_50_percent)
                     
                 elif status == 'completed':
@@ -84,7 +93,7 @@ class HomePage(TemplateView):
         
         return super().get(request, *args, **kwargs)
     
-    # helper Method to get values for each project
+    # helper Method to get anonatated values for each project
     def get_annotated_projects(self, queryset):
         return queryset.annotate(
             total_tasks=Count('task'),
@@ -129,7 +138,7 @@ class HomePage(TemplateView):
             content_type = "application/html"
         )
                 
-#  Handle DELETE and PUT request call to endpoint /<int>
+#  Handle DELETE and PUT request call to endpoint /project_id>
 class EditDeleteProject (View):
     #  Handle PUT request
     def post(self, request, pk, *args, **kwargs):
@@ -179,7 +188,38 @@ class EditDeleteProject (View):
 #  Hande POST request to create new task for a given project
 class CreateTask(View):
     
-    #handle POST request for endpoint /1/task
+    #handle POST request for endpoint /project_id/task
     def post (self, request, pk, *args, **kwargs):
-        return  JsonResponse({"msg": "hello"})
+        
+        task_title = request.POST.get('title')
+        description = request.POST.get('description')
+        completed = request.POST.get('completed_task')
+        completed_bool = True if completed == 'true' else False
+        
+        if not task_title:
+            return JsonResponse({'error': 'Title not provided'}, status=400)
+        
+        try: 
+            project = Project.objects.get(pk=pk)
+            
+            Task.objects.create(
+                 title=task_title,
+                description=description,
+                completed=completed_bool,
+                project_id=project
+            )   
+            # annotate values of the project
+            project = annotate_single_queryset(project)
+            print(project.total_tasks)
+            return render(
+                request,
+                "components/project_component.html",
+                {
+                    "project": project,
+                },
+                content_type = "application/html"
+            )
+        
+        except Project.DoesNotExist:
+            return JsonResponse({'error': 'project not found'}, status=404)
     
