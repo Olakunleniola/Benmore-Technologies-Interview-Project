@@ -45,8 +45,6 @@ DEBUG = bool(int(os.environ.get("DEBUG", 1)))
 
 ALLOWED_HOSTS = ['localhost', "127.0.0.1"] + [os.environ.get("NEW_HOST", "")]
 
-print(ALLOWED_HOSTS)
-
 # Application definition
 
 INSTALLED_APPS = [
