@@ -39,7 +39,7 @@ class HomePage(TemplateView):
     http_method_names = ["get", "post"]
     template_name = "homepage.html"
     
-    # provide context data for the hpmepage route /
+    # provide context data for the hpmepage route /projects
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         projects = self.get_annotated_projects(Project.objects.all())
@@ -105,7 +105,7 @@ class HomePage(TemplateView):
             )
         ).order_by("-id")
     
-    # Handle POST request for index route /
+    # Handle POST request for index route /projects to create new Project
     def post(self, request, *args, **kwargs):
         title = request.POST.get('title')
         project_image = request.FILES.get("image")
@@ -120,35 +120,36 @@ class HomePage(TemplateView):
                     'error': 'Invalid profile image. Only JPEG, PNG, and GIF files are allowed.'
                 }, status=400)
         
-        project = Project.objects.create(title=title)
-        if project_image:
-            project.image = project_image
-        
-        project.save()
-        
-        # Retrieve the project again to get its pk
-        project = Project.objects.get(pk=project.pk)
-        
-        return render(
-            request,
-            "components/projects_component.html",
-            {
-                "project": project,
-            },
-            content_type = "application/html"
-        )
-                
-#  Handle DELETE and PUT request call to endpoint /project_id>
+        try:
+            project = Project.objects.create(title=title)
+            if project_image:
+                project.image = project_image
+            
+            project.save()
+            
+            # Retrieve the project again to get its pk
+            project = Project.objects.get(pk=project.pk)
+            project = annotate_single_queryset(project)
+            
+            return render(
+                request,
+                "components/projects_component.html",
+                {
+                    "project": project,
+                },
+                content_type = "application/html"
+            )
+        except Exception as e:
+            print(e)
+            JsonResponse({"error": "An error occured"}, status=400) 
+                        
+#  Handle DELETE and PUT request call to endpoint /projects/project_id>
 class EditDeleteProject (View):
     #  Handle PUT request
     def post(self, request, pk, *args, **kwargs):
         
         new_title = request.POST.get('title')
         new_project_image = request.FILES.get("image")
-        
-        
-        if not new_title:
-            return JsonResponse({'error': 'Title not provided'}, status=400)
         
         if new_project_image:
             if not verify_image(new_project_image):
@@ -224,4 +225,3 @@ class CreateTask(View):
         
         except Project.DoesNotExist:
             return JsonResponse({'error': 'project not found'}, status=404)
-    

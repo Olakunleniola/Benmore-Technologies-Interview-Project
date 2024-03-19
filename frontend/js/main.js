@@ -120,7 +120,7 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
     $.ajax({
         type: "POST",
-        url: "/",
+        url: $btn.data("url"),
         data: formData,
         processData: false,  // Prevent jQuery from processing data
         contentType: false,  // Prevent jQuery from setting content type
@@ -158,7 +158,7 @@ $(document).on("click", ".toggle-project-modal", function(e) {
     
     $.ajax ({
         type: "GET",
-        url: `/?query=${query}`,
+        url: `/projects?query=${query}`,
 
         success: (htmlData) => {
             $searchBar.val("")
@@ -191,7 +191,7 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
     $.ajax ({
         type: "GET",
-        url: `/?percentage=${$selector.val()}`,
+        url: `/projects?percentage=${$selector.val()}`,
 
         success: (htmlData) => {
             $('#result_container').html(htmlData)
@@ -208,17 +208,20 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 })
 
 // Edit Project
-.on("click", "#save-edit", function(e){
+.on("click", ".save-edit", function(e){
+    console.log("cdcdscdcdscdscsdcs")
     const parent_id = $(this).data("parent_id")
     const newTitle = $(`#${parent_id} #editname`).val()
     const newImg = $(`#${parent_id} input[type=file]`).prop("files")[0]
     const $parent = $(`#${parent_id}`)
     const target = e.target;
     const formData = new FormData()
+
     if(!newTitle.length && !newImg){closeEdit(target); return;}
     
     if (newTitle.length){formData.append("title", newTitle.trim())}
     if (newImg){formData.append("image", newImg)}
+
 
     $.ajax({
         type: "POST",
@@ -282,6 +285,7 @@ function editParent (element) {
 // Image Previewer Helper Function
 function previewImage(input, previewTargetId) {
     const $preview = $(previewTargetId);
+    console.log(previewTargetId, "cscscasc")
     $preview.removeClass("hidden")
     if (input.files && input.files[0]) {
         const reader = new FileReader();

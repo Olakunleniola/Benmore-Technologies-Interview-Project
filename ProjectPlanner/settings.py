@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,23 +22,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+# Media settings Production
+
+# CLoud Storage configuration 
+
+cloudinary.config( 
+  cloud_name = "dhlmazrcf", 
+  api_key =  os.environ.get("CLD_KEY", ""), 
+  api_secret = os.environ.get("CLD_SECRET", "") 
+)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%kk=$&@1jnp5!b$^5evcx8a6$g(uow+9u%29az=d0=rxff1&h_'
+
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-%kk=$&@1jnp5!b$^5evcx8a6$g(uow+9u%29az=d0=rxff1&h_")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', "127.0.0.1"] + [os.environ.get("NEW_HOST", "")]
 
-TAILWIND_APP_NAME = 'theme'
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
 
 
 # Application definition
@@ -52,6 +61,7 @@ INSTALLED_APPS = [
     "project",
     "task",
     'sorl.thumbnail',
+    'cloudinary',
     
 ]
 
@@ -134,8 +144,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join (BASE_DIR, "media/")
+if DEBUG: 
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join (BASE_DIR, "media/")
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
@@ -147,3 +158,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# production static storage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
