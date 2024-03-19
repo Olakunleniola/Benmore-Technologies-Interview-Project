@@ -41,7 +41,7 @@ cloudinary.config(
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-%kk=$&@1jnp5!b$^5evcx8a6$g(uow+9u%29az=d0=rxff1&h_")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get("DEBUG", 0)))
+DEBUG = bool(int(os.environ.get("DEBUG", 1)))
 
 ALLOWED_HOSTS = ['localhost', "127.0.0.1"] + [os.environ.get("NEW_HOST", "")]
 
