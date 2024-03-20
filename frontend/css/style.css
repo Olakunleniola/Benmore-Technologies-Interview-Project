@@ -44,3 +44,17 @@ progress::-moz-progress-bar {
     0 10px 15px -3px rgba(252, 44, 44, 0.65), /* First shadow */
     0 4px 6px -4px rgba(146, 30, 30, 0.67) !important;    /* Second shadow */
 }
+
+::-webkit-scrollbar {
+  width: 5px; /* width of the scrollbar */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #007bff; /* color of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scrollbar handle on hover */
+}
