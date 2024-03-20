@@ -148,13 +148,19 @@ $(document).on("click", ".toggle-project-modal", function(e) {
     })
 })
 
-
 //  Search Project by Title/Name
 .on("click", "#search_botton", function(e) {
     e.preventDefault()
     const $searchBar = $(".search-bar")
     const query = $searchBar.val().trim()
-    if (!query){return}
+
+    if(!query.length){
+        $searchBar.addClass("red_shadow placeholder:text-red-400").prop("placeholder", "This field is required")
+        setTimeout(() => {
+            $searchBar.removeClass("red_shadow placeholder:text-red-400").prop("placeholder", "Enter Task Title")
+        }, 5000)
+        return
+    }
     
     $.ajax ({
         type: "GET",
@@ -184,7 +190,6 @@ $(document).on("click", ".toggle-project-modal", function(e) {
     })
 })
 
-
 // Filter Project by Status
 .on("change", "#filter_project", function(e) {
     $selector = $(this)
@@ -209,7 +214,6 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
 // Edit Project
 .on("click", ".save-edit", function(e){
-    console.log("cdcdscdcdscdscsdcs")
     const parent_id = $(this).data("parent_id")
     const newTitle = $(`#${parent_id} #editname`).val()
     const newImg = $(`#${parent_id} input[type=file]`).prop("files")[0]

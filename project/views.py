@@ -36,18 +36,22 @@ def annotate_single_queryset(queryset):
 
 # Handle POST and GETroutes for index for  / and request query parameters
 class HomePage(TemplateView):
+    
     http_method_names = ["get", "post"]
     template_name = "homepage.html"
     
     # provide context data for the hpmepage route /projects
     def get_context_data(self, **kwargs):
-        context =  super().get_context_data(**kwargs)
-        projects = self.get_annotated_projects(Project.objects.all())
-        context["projects"] = projects
-        context['no_of_result'] = projects.count()
+        try:
+            context =  super().get_context_data(**kwargs)
+            projects = self.get_annotated_projects(Project.objects.all())
+            context["projects"] = projects
+            context['no_of_result'] = projects.count()
 
-        return context
-    
+            return context
+        except Exception as e:
+            print(e)
+            
     # handle routes for query parameter like e.g /?query="query"
     def get(self, request, *args, **kwargs):
         # Check if 'name' parameter is present in the request query
@@ -213,7 +217,6 @@ class CreateTask(View):
             )   
             # annotate values of the project
             project = annotate_single_queryset(project)
-            print(project.total_tasks)
             return render(
                 request,
                 "components/project_component.html",

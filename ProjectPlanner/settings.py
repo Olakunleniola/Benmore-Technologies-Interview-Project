@@ -14,6 +14,7 @@ from pathlib import Path
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,8 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # CLoud Storage configuration 
 
+
+          
 cloudinary.config( 
   cloud_name = "dhlmazrcf", 
   api_key =  os.environ.get("CLD_KEY", ""), 
@@ -42,6 +45,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-%kk=$&@1j_")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get("DEBUG", 1)))
+print(DEBUG)
 
 ALLOWED_HOSTS = ['localhost', "127.0.0.1"] + [os.environ.get("NEW_HOST", "")]
 
@@ -100,13 +104,20 @@ WSGI_APPLICATION = 'ProjectPlanner.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
+else:
+    
+    DATABASES = {     
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL", "" )),              
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -136,6 +147,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
@@ -146,16 +159,18 @@ if DEBUG:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join (BASE_DIR, "media/")
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/")
 ]
+# production static storage
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# production static storage
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
