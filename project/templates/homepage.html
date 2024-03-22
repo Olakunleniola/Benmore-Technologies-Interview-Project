@@ -4,7 +4,7 @@
 
 {% block body %} 
 
-    <div class="main overflow-auto w-full grow p-2">
+    <div class="main w-full  p-2">
         <!-- Top Search Bar -->
         <div class="header_search flex w-full justify-between h-14">
             <!-- Project / Task Title section -->
@@ -75,7 +75,7 @@
                                 <select id="filter_project" class="appearance-none bg-transparent w-32 p-2 rounded-lg text-center text-gray-400 transition-all border border-1 border-gray-400 rounded-lg justify-center items-center transition-all focus:bg-gray-200 focus:bg-opacity-80 active:bg-gray-100 active:bg-opacity-80 hover:bg-gray-100 hover:border-2 hover:border-gray-900 hover:text-gray-900 hover:font-bold focus:border-2 focus:text-gray-900 focus:border-gray-900 active:text-gray-900 focus:font-bold p-2 pr-8 outline-none">
                                     <option class="p-3" value="all">All</option>
                                     <option class="p-3" value="completed">Completed</option>
-                                    <option class="p-3" value="above_50">Above 50%</option>
+                                    <option class="p-3" value="above_50">50% Above</option>
                                     <option class="p-3" value="below_50">Below 50%</option>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
@@ -88,7 +88,7 @@
                 
                     </div>   
                     <!-- Result Body -->
-                    <div id="result_container">
+                    <div id="result_container" class="overflow-y-auto">
                         {% include 'components/result_component.html' with projects=projects %}
                     </div>
                 </div>
@@ -228,7 +228,7 @@
     
             </div>
         </div>
-
+        
     </div>
 
 {% endblock%}

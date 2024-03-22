@@ -78,6 +78,7 @@ $(document).on("click", ".toggle-project-modal", function(e) {
             $btn.prop("disabled", false).html(buttonInnerHtml)
             $(".task-description").val("");
             $('.task-title').val("");
+            $('#completed_task').prop("checked", false)
             $parent.html(htmlData);
         },
 
@@ -130,7 +131,7 @@ $(document).on("click", ".toggle-project-modal", function(e) {
             $btn.prop("disabled", false).html(buttonInnerHtml)
             $(".project-modal").addClass("hidden");
             $textarea.val("");
-            $('#upload').val("");
+            $('#new_upload').val("");
             $("#prev").addClass("hidden");
             $(".project-modal").addClass("hidden")
         },
@@ -204,9 +205,9 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
         error: (e) => {
             console.log(e)
-            $selector.addClass("text-red-500 red_shadow").text("Error")
+            $selector.addClass("text-red-500 red_shadow")
             setTimeout(() => {
-                $selector.removeClass("text-red-500 red_shadow").val("All").text("All")
+                $selector.removeClass("text-red-500 red_shadow")
             },5000)
         },
     })
@@ -228,10 +229,10 @@ $(document).on("click", ".toggle-project-modal", function(e) {
 
 
     $.ajax({
-        type: "POST",
+        type: "PUT",
         url: $(this).data("url"),
         data: formData,
-        processData: false,  // Prevent jQuery from processing data
+        processData: false,  // Prevent     jQuery from processing data
         contentType: false,
 
         success: (htmlData) => {
@@ -289,17 +290,13 @@ function editParent (element) {
 // Image Previewer Helper Function
 function previewImage(input, previewTargetId) {
     const $preview = $(previewTargetId);
-    console.log(previewTargetId, "cscscasc")
     $preview.removeClass("hidden")
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-
         reader.onload = function (e) {  
             $preview.attr("src", e.target.result);
         };
         reader.readAsDataURL(input.files[0]);
-    }else {
-        console.log("csdvsdvsdvsdvsdvsdvds")
     }
 }
 
