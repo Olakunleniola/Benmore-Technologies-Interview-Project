@@ -55,6 +55,7 @@ class HomePage(TemplateView):
         # Check if 'name' parameter is present in the request query
         query = request.GET.get('query')
         status = request.GET.get('percentage')
+        print(status)
         
         if status:
             try:
@@ -76,8 +77,9 @@ class HomePage(TemplateView):
                 
                 return JsonResponse({"error": "ascsfsfsd"}, status=400)
                     
-            except:
-                JsonResponse({"error":"something broke"}, status=400)
+            except Exception as e:
+                print(e)
+                return JsonResponse({"error":"something broke"}, status=400)
         
         elif query:
             # Get project by name
@@ -131,7 +133,7 @@ class HomePage(TemplateView):
             )
         except Exception as e:
             print(e)
-            JsonResponse({"error": "An error occured"}, status=400) 
+            return JsonResponse({"error": "An error occured"}, status=400) 
     
     # helper Method to get annotated values for each project
     def get_annotated_projects(self, queryset):
@@ -139,8 +141,12 @@ class HomePage(TemplateView):
             total_tasks=Count('task'),
             completed_tasks=Count(Case(When(task__completed=True, then=1))),
             incomplete_tasks=Count(Case(When(task__completed=False, then=1))),
-            completion_percentage=ExpressionWrapper(
-                F('completed_tasks') * 100.0 / F('total_tasks'),
+            completion_percentage=Case(
+                When(total_tasks=0, then=0),  # Handle division by zero case
+                default=ExpressionWrapper(
+                    F('completed_tasks') * 100.0 / F('total_tasks'),
+                    output_field=FloatField()
+                ),
                 output_field=FloatField()
             )
         ).order_by("-id")
@@ -230,3 +236,7 @@ class CreateTask(View):
         
         except Project.DoesNotExist:
             return JsonResponse({'error': 'project not found'}, status=404)
+        
+class Show404Page(TemplateView):
+    http_method_names = ["get"]
+    template_name = "404.html"
